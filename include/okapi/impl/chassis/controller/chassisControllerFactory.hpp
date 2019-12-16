@@ -225,17 +225,8 @@ class ChassisControllerFactory {
   okapi_makeCreateBaseInt(std::shared_ptr<ChassisControllerIntegrated>,
                           std::make_shared<ChassisControllerIntegrated>,
                           createPtr);
-  // const IterativePosPIDController::Gains &idistanceArgs,
-  // const IterativePosPIDController::Gains &iangleArgs,
-  // const IterativePosPIDController::Gains &iturnArgs;
 
   okapi_makeCreateBasePid(ChassisControllerPID, create);
   okapi_makeCreateBasePid(std::shared_ptr<ChassisControllerPID>, createPtr);
-
 };
-// class intake {
-//   public:
-//   okapi_makeCreateAll(Motor);
-// };
-} // namespace okapi
-  // auto intake = IterativeControllerFactory::motorVelocity({15, -14}, 0.001, 0.0001);
+} 

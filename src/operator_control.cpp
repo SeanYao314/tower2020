@@ -84,7 +84,7 @@ void intake_control() {
 	} else if(master.get_digital(E_CONTROLLER_DIGITAL_L2) && armPos > 0) {
 		//slower for scoring in towers
 		pros::delay(15);
-		intake_drive(-85,-85);
+		intake_drive(-75,-75);
 	} else {
 		intake_drive(0,0);
 	}
