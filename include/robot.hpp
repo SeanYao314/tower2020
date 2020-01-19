@@ -10,7 +10,7 @@ const int CHASSIS_LEFT_FRONT  = 19;
 const int CHASSIS_LEFT_REAR   = 20;
 const int CHASIIS_RIGHT_FRONT = 12;
 const int CHASSIS_RIGHT_REAR  = 11;
-
+//test
 //inkate motor ports
 const int INTAKE_MOTOR_LEFT   = 13;
 const int INTAKE_MOTOR_RIGHT  = 15;
@@ -24,7 +24,7 @@ const int ARM_MOTOR = 18;
 
 //arm varibles
 const int ARM_PRESETS[5]  = {0, -650, -734, -827, -1025};
-const int ARM_PRESETS_LEN = 5;
+const int ARM_PRESETS_LEN = 5; 
 
 //chassis
 extern pros::Motor chassis_left_front;
@@ -46,12 +46,12 @@ extern int autonSelection;
 
 //autons 
 void blue_1cube();
-void blue_4cube();
 void red_1cube();
-void red_4cube();
+void blue_4cube();
 void skill1();
-void skill2();
+void red_4cube();
 
+void skill2();
 //functions 
 void chassis_tank_drive(float left, float right);
 
@@ -60,10 +60,10 @@ void intake_drive(float left_intake_speed, float right_intake_speed);
 void arm_drive(int pos);
 
 void intake_control();
-
 void lever_drive(float lever_speed);
-void lever_control();
 void arm_control();
 void arm_control2();
+
+void lever_control();
 
 #endif

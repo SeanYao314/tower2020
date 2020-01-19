@@ -11,22 +11,21 @@ int armPos = 0;
 
 //presets
 void arm_control() {
-	int armTarget = 0;
 	int armIterate = 0;
-	
-	if (master.get_digital_new_press(DIGITAL_RIGHT)) {
+	int armTarget = 0;
+	if (master.get_digital_new_press(DIGITAL_RIGHT) == 1) {
 		//descore high
 		arm_drive(3);
 		armPos = 3;
-	} else if (master.get_digital_new_press(DIGITAL_UP)) {
+	} else if (master.get_digital_new_press(DIGITAL_UP) == 1) {
 		//score high
 		arm_drive(4);
 		armPos = 4;
-	} else if (master.get_digital_new_press(DIGITAL_LEFT)) {
+	} else if (master.get_digital_new_press(DIGITAL_LEFT) == 1) {
 		//descore low
 		arm_drive(1);
 		armPos = 1;
-	} else if(master.get_digital_new_press(DIGITAL_DOWN)) {
+	} else if(master.get_digital_new_press(DIGITAL_DOWN) == 1) {
 		//score low
 		arm_drive(2);
 		armPos = 2;
@@ -45,35 +44,37 @@ void arm_control2() {
 	
 	if(master.get_digital(E_CONTROLLER_DIGITAL_B)) {
 
-		arm_motor.move_voltage(-12000);
-		arm_motor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+		arm_motor.move_voltage(-3000);
+		arm_motor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 		// pros::delay(50);
 		// arm_motor.move_voltage(0);
-	} else if (master.get_digital(E_CONTROLLER_DIGITAL_A)) {
+	} else if(master.get_digital(E_CONTROLLER_DIGITAL_A)) {
 
-		arm_motor.move_voltage(5000);
-		arm_motor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-		// pros::delay(50);
-		// arm_motor.move_voltage(0);
+		arm_motor.move_voltage(3000);
+		arm_motor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 
 	} else if (master.get_digital(E_CONTROLLER_DIGITAL_X)) {
 
 		arm_motor.set_brake_mode(E_MOTOR_BRAKE_COAST);
-		arm_motor.move_voltage(7000);
+		arm_motor.move_voltage(10000);
 		pros::delay(400);
 		arm_motor.move_voltage(0);
 
 	}  else if (armPos == 0) {
 		//so arm control 1&2 dont collide
-		arm_motor.move_voltage(0);
+		// arm_motor.move_voltage(0);
 	}
 
 }
 //for chassis
 void chassis_control() {
-	int left_power = master.get_analog(ANALOG_LEFT_Y);
-	int right_power = master.get_analog(ANALOG_RIGHT_Y);
-	chassis_tank_drive(right_power, -left_power);
+	// int left_power = master.get_analog(ANALOG_LEFT_Y);
+	// int right_power = master.get_analog(ANALOG_RIGHT_Y);
+	// chassis_tank_drive(-right_power, left_power);
+	chassis.stop();
+	chassis.tank((master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) * 0.00787401574),
+				master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) * 0.00787401574);
+	
 }
 //intake
 void intake_control() {
@@ -91,10 +92,10 @@ void intake_control() {
 }
 
 void lever_control() {
-	if(master.get_digital(E_CONTROLLER_DIGITAL_R2)) {
+	if(master.get_digital(E_CONTROLLER_DIGITAL_R2) && ) {
 		lever_drive(-200);
 		//intake pushes out lever slightly
-		intake_drive(75, 75);
+		intake_drive(135, 135);
 	} else if(master.get_digital(E_CONTROLLER_DIGITAL_R1)) {
 		lever_drive(200);
 		intake_drive(-15, -15);
@@ -102,4 +103,6 @@ void lever_control() {
 		lever_drive(0);
 	}
 }
+
+
 

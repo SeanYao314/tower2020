@@ -20,7 +20,7 @@ void opcontrol() {
 		intake_control();
 
 		//lever stuff
-		lever_control();
+		lever_control(1);
 
 		// lift from korvex
 		arm_control();

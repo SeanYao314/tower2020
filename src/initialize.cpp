@@ -18,7 +18,7 @@ pros::Motor chassis_right_front(CHASIIS_RIGHT_FRONT);
 pros::Motor chassis_left_rear(CHASSIS_LEFT_REAR);
 pros::Motor chassis_left_front(CHASSIS_LEFT_FRONT);
 
-const auto WHEEL_DIAMETER = 4.5_in;
+const auto WHEEL_DIAMETER = 4_in;
 const auto CHASSIS_WIDTH = 9.3_in;
 
 // chassis controller 
@@ -28,13 +28,14 @@ okapi::ChassisControllerPID chassis = ChassisControllerFactory::create(
   {-CHASSIS_LEFT_FRONT, -CHASSIS_LEFT_REAR}, 
   {CHASIIS_RIGHT_FRONT, CHASSIS_RIGHT_REAR},
 
-    IterativePosPIDController::Gains{0.003, 0.0012, 0.000012}, 
-    IterativePosPIDController::Gains{0.0004, 0.0005, 0.0002},  
-    IterativePosPIDController::Gains{0.003, 0.0065, 0.000045},  
+    IterativePosPIDController::Gains{0.00420, 0.0000, 0.00000}, //distance
+    IterativePosPIDController::Gains{0.0024, 0.0005, 0.00002},  //angle
+    IterativePosPIDController::Gains{0.003, 0.0065, 0.000045},  //turn
 
   AbstractMotor::gearset::green,
   {WHEEL_DIAMETER, CHASSIS_WIDTH}
 );
+
 
 /* choose only one of the following: either separated chassis motors, or the chassis controller */
 AsyncPosIntegratedController arm = AsyncControllerFactory::posIntegrated(ARM_MOTOR);
