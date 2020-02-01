@@ -5,14 +5,10 @@
 using namespace okapi;
 using namespace pros;
 //chassis
-void chassis_tank_drive(float left, float right) {
-	chassis_right_rear.move(right);
-	chassis_right_front.move(right);
-	
-	chassis_left_front.move(-left);
-	chassis_left_rear.move(-left);
+void chassis_tank_drive(int left, int right) {
+    const double chassis_movement_threshold = 0.05;
+    chassis.tank(left / 127.0, right / 127.0, chassis_movement_threshold);
 }
-
 //intake
 void intake_drive(float left_intake_speed, float right_intake_speed) {
 	intake_motor_left.move(left_intake_speed);
@@ -28,8 +24,8 @@ int armIterate = 0;
 
 void arm_drive(int presetPos) {
 	//so arm doesn't click w/ gear
-	lever_drive(200);
-	pros::delay(30);
+	lever_drive(-200);
+	pros::delay(50);
 	lever_drive(0);
 	armIterate = presetPos;
 	if (armIterate >= ARM_PRESETS_LEN) {

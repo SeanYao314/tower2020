@@ -10,10 +10,10 @@ const int CHASSIS_LEFT_FRONT  = 19;
 const int CHASSIS_LEFT_REAR   = 20;
 const int CHASIIS_RIGHT_FRONT = 12;
 const int CHASSIS_RIGHT_REAR  = 11;
-//test
+
 //inkate motor ports
-const int INTAKE_MOTOR_LEFT   = 13;
-const int INTAKE_MOTOR_RIGHT  = 15;
+const int INTAKE_MOTOR_LEFT   = 15;
+const int INTAKE_MOTOR_RIGHT  = 13;
 
 //lever motor 
 const int LEVER_MOTOR = 16;
@@ -21,49 +21,35 @@ const int LEVER_MOTOR = 16;
 //arm motor
 const int ARM_MOTOR = 18;
 
-
 //arm varibles
-const int ARM_PRESETS[5]  = {0, -650, -734, -827, -1025};
-const int ARM_PRESETS_LEN = 5; 
+const int ARM_PRESETS[5]  = {0, -666, -734, -845, -1025};
+const int ARM_PRESETS_LEN = 5;
 
 //chassis
-extern pros::Motor chassis_left_front;
-extern pros::Motor chassis_left_rear;
-extern pros::Motor chassis_right_front;
-extern pros::Motor chassis_right_rear;
-extern pros::Motor intake_motor_left;
-extern pros::Motor intake_motor_right;
-extern pros::Motor lever_motor;
-extern pros::Motor arm_motor;
+// extern okapi::Motor chassis_left_front;
+// extern okapi::Motor chassis_left_rear;
+// extern okapi::Motor chassis_right_front;
+// extern okapi::Motor chassis_right_rear;
+extern okapi::Motor intake_motor_left;
+extern okapi::Motor intake_motor_right;
+extern okapi::Motor lever_motor;
+extern okapi::Motor arm_motor;
 extern pros::Controller master;
-extern okapi::ChassisControllerPID chassis;
-extern okapi::AsyncPosIntegratedController arm;
-extern okapi::AsyncPosIntegratedController lever;
+extern okapi::ChassisControllerIntegrated chassis;
 
-
-//auto selection
-extern int autonSelection;
-
-//autons 
-void blue_1cube();
-void red_1cube();
-void blue_4cube();
-void skill1();
-void red_4cube();
-
-void skill2();
 //functions 
-void chassis_tank_drive(float left, float right);
+void chassis_tank_drive(int left, int right);
 
 void chassis_control();
 void intake_drive(float left_intake_speed, float right_intake_speed);
 void arm_drive(int pos);
 
 void intake_control();
+
 void lever_drive(float lever_speed);
+void lever_control();
 void arm_control();
 void arm_control2();
-
-void lever_control();
+void auton_simulator();
 
 #endif

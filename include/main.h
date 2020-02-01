@@ -36,7 +36,6 @@
 
 #include "api.h"
 
-
 /**
  * You should add more #includes here
  */
@@ -68,6 +67,9 @@ void initialize(void);
 void disabled(void);
 void competition_initialize(void);
 void opcontrol(void);
+
+const int ITERATION_INTERVAL = 50;
+
 #ifdef __cplusplus
 }
 #endif
