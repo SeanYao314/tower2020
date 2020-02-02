@@ -13,7 +13,7 @@ int armPos = 0;
 void arm_control() {
 	int armTarget = 0;
 	int armIterate = 0;
-	
+
 	if (master.get_digital_new_press(DIGITAL_RIGHT)) {
 		//descore high
 		arm_drive(3);
@@ -37,12 +37,12 @@ void arm_control() {
 		arm_motor.move_voltage(12000);
 		pros::delay(500);
 		arm_motor.move_voltage(0);
-	} 
+	}
 }
 
 //manual drive for arm
 void arm_control2() {
-	
+
 	if(master.get_digital(E_CONTROLLER_DIGITAL_B)) {
 
 		arm_motor.move_voltage(-12000);
@@ -77,7 +77,7 @@ void chassis_control() {
 }
 
 void auton_simulator() {
-	if (master.get_digital(E_CONTROLLER_DIGITAL_Y)) {	
+	if (master.get_digital(E_CONTROLLER_DIGITAL_Y)) {
 		int x_power = master.get_analog(ANALOG_RIGHT_X);
 		if (abs(x_power) > 120) {
 			autonomous();
@@ -103,7 +103,7 @@ int leverEndPos = -2620;
 int leverStartPos= 69;
 void lever_control() {
 	if(master.get_digital(E_CONTROLLER_DIGITAL_R1)) {
-		intake_drive(34.0,34.0);
+		intake_drive(24.0,24.0);
 		lever_motor.moveAbsolute(leverEndPos, E_CONTROLLER_DIGITAL_R1*12.5);
 		//intake pushes out lever slightly
 	} else if(master.get_digital(E_CONTROLLER_DIGITAL_R2)) {
