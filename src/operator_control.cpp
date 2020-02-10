@@ -101,10 +101,17 @@ void intake_control() {
 }
 int leverEndPos = -2620;
 int leverStartPos= 69;
+int tray_speed = 12.5;
+
 void lever_control() {
 	if(master.get_digital(E_CONTROLLER_DIGITAL_R1)) {
-		intake_drive(24.0,24.0);
-		lever_motor.moveAbsolute(leverEndPos, E_CONTROLLER_DIGITAL_R1*12.5);
+		intake_drive(24.0, 24.0);
+		if(lever_motor.get_position() < -1420) {
+			tray_speed = 10;
+		} else if(lever_motor.get_position() >= -1420) {
+			tray_speed = 200;
+		}
+		lever_motor.moveAbsolute(leverEndPos, E_CONTROLLER_DIGITAL_R1*tray_speed);
 		//intake pushes out lever slightly
 	} else if(master.get_digital(E_CONTROLLER_DIGITAL_R2)) {
 		intake_drive(0,0);
