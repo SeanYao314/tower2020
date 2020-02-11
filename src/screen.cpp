@@ -21,8 +21,8 @@ namespace screen {
 	};
 
 	static const char * skill_btnm_map[] = {
-		"Uniform", "Victor", "Whiskey", "\n",
-		"Xray", "Yankee", "Zulu", ""
+		"Uniform", "Victor", "Whiskey", "Xray", "Yankee", "\n",
+		"Zulu", "Joker", "Phantom", "Ghost", ""
 	};
 
 	static const char * action_btnm_map[] = {
@@ -180,15 +180,6 @@ namespace screen {
 		return btn_matrix;
 	}
 
-	vector<recording::RecordUnit>& load_replaying() {
-		static vector<recording::RecordUnit> empty;
-		if (storage::is_slot_taken(selected_program)) {
-			return storage::get_program(selected_program);
-		} else {
-			return empty; 
-		}
-	}
-
 	void setup_screen()
 	{
 		pros::delay(50); // sometimes LVGL won't draw the screen if there is no delay or it is not inverted on the brain
@@ -211,7 +202,9 @@ namespace screen {
 			style->body.padding.hor = 10;
 			btn_matrix_group[i] = add_button_matrix_to_tab(tab, tab_button_matrix_names[i]);
 		}
+	}
 
-		recording::set_replay_loader(load_replaying);
+	const char * get_selected_program() {
+		return selected_program;
 	}
 }

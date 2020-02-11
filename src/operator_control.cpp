@@ -1,6 +1,7 @@
 #include "main.h"
 #include "okapi/api.hpp"
 #include "robot.hpp"
+#include "recording.h"
 
 using namespace okapi;
 using namespace pros;
@@ -80,7 +81,7 @@ void arm_control2() {
 void chassis_control() {
 	int left_power = master.get_analog(ANALOG_LEFT_Y);
 	int right_power = master.get_analog(ANALOG_RIGHT_Y);
-	chassis_tank_drive(right_power, left_power);
+	chassis_tank_drive(left_power, right_power);
 }
 
 void auton_simulator() {
@@ -88,6 +89,11 @@ void auton_simulator() {
 		int x_power = master.get_analog(ANALOG_RIGHT_X);
 		if (abs(x_power) > 120) {
 			autonomous();
+		}
+
+		int left_x_power = master.get_analog(ANALOG_LEFT_X);
+		if (abs(left_x_power) > 120) {
+			recording::printout();
 		}
 	}
 }
