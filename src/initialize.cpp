@@ -14,8 +14,8 @@ okapi::Motor lever_motor(LEVER_MOTOR, false, AbstractMotor::gearset::green);
 okapi::Motor arm_motor(ARM_MOTOR, false, AbstractMotor::gearset::green);
 pros::Controller master (E_CONTROLLER_MASTER);
 
-/* choose only one of the following: either separated chassis motors, or the chassis controller */
-//chassis motors
+pros::ADIGyro gyro(1);
+
 // okapi::Motor chassis_right_rear(CHASSIS_RIGHT_REAR);
 // okapi::Motor chassis_right_front(CHASIIS_RIGHT_FRONT);
 // okapi::Motor chassis_left_rear(CHASSIS_LEFT_REAR);
@@ -25,17 +25,25 @@ const auto WHEEL_DIAMETER = 4.5_in;
 const auto CHASSIS_WIDTH = 9.3_in;
 
 // chassis controller
-okapi::ChassisControllerIntegrated chassis = ChassisControllerFactory::create(
+// okapi::ChassisControllerIntegrated chassis = ChassisControllerFactory::create(
+//   {-CHASSIS_LEFT_FRONT, -CHASSIS_LEFT_REAR}, 
+//   {CHASIIS_RIGHT_FRONT, CHASSIS_RIGHT_REAR},
+//   AbstractMotor::gearset::green,
+//   {WHEEL_DIAMETER, CHASSIS_WIDTH}
+// );
+
+okapi::ChassisControllerPID chassis = ChassisControllerFactory::create(
   {-CHASSIS_LEFT_FRONT, -CHASSIS_LEFT_REAR}, 
   {CHASIIS_RIGHT_FRONT, CHASSIS_RIGHT_REAR},
+
+    IterativePosPIDController::Gains{0.00420, 0.0000, 0.00000}, //distance
+    IterativePosPIDController::Gains{0.0024, 0.0005, 0.00002},  //angle
+    IterativePosPIDController::Gains{0.003, 0.0065, 0.000045},  //turn
+
   AbstractMotor::gearset::green,
   {WHEEL_DIAMETER, CHASSIS_WIDTH}
 );
 
-/* choose only one of the following: either separated chassis motors, or the chassis controller 
-AsyncPosIntegratedController arm = AsyncControllerFactory::posIntegrated(ARM_MOTOR);
-AsyncPosIntegratedController lever = AsyncControllerFactory::posIntegrated(LEVER_MOTOR);
-*/
 
 vector<AbstractMotor*>& get_motor_group() {
 	static vector<AbstractMotor*> motor_group;

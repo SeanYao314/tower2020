@@ -5,6 +5,11 @@
 #include "pros/misc.h"
 #include "okapi/api.hpp"
 
+// #define GYRO_PORT 1
+
+//sensors
+
+
 //chassis motor ports
 const int CHASSIS_LEFT_FRONT  = 19;
 const int CHASSIS_LEFT_REAR   = 20;
@@ -22,8 +27,9 @@ const int LEVER_MOTOR = 16;
 const int ARM_MOTOR = 18;
 
 //arm varibles
-const int ARM_PRESETS[5]  = {0, -666, -734, -845, -1025};
+const int ARM_PRESETS[5]  = {0, -666, -734, -845, -1005};
 const int ARM_PRESETS_LEN = 5;
+
 
 //chassis
 // extern okapi::Motor chassis_left_front;
@@ -35,7 +41,10 @@ extern okapi::Motor intake_motor_right;
 extern okapi::Motor lever_motor;
 extern okapi::Motor arm_motor;
 extern pros::Controller master;
-extern okapi::ChassisControllerIntegrated chassis;
+extern okapi::ChassisControllerPID chassis;
+extern pros::ADIGyro gyro;
+
+//sensors
 
 //functions 
 void chassis_tank_drive(int left, int right);
@@ -51,5 +60,6 @@ void lever_control();
 void arm_control();
 void arm_control2();
 void auton_simulator();
+void gyroTest();
 
 #endif

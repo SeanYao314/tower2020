@@ -6,6 +6,12 @@ using namespace okapi;
 using namespace pros;
 
 
+void gyroTest() {
+	if(master.get_digital_new_press(DIGITAL_X) > 0) {
+		std::cout << "Distance: " << gyro.get_value();
+	} 
+}
+
 //where the arm is
 int armPos = 0;
 

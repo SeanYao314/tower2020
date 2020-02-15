@@ -14,6 +14,10 @@ void competition_initialize() {
 
 void opcontrol() {
 	while (true) {
+		//gyrodisplay
+		gyroTest();
+
+		//auton
 		auton_simulator();
 
 		//chassis stuff
@@ -32,5 +36,6 @@ void opcontrol() {
 		
 		recording::record();
 		pros::delay(ITERATION_INTERVAL);
+		
 	}
 }
