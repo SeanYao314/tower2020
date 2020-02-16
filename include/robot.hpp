@@ -41,8 +41,8 @@ extern okapi::Motor intake_motor_right;
 extern okapi::Motor lever_motor;
 extern okapi::Motor arm_motor;
 extern pros::Controller master;
-extern okapi::ChassisControllerPID chassis;
-extern pros::ADIGyro gyro;
+extern std::shared_ptr<okapi::OdomChassisController> chassis;
+extern pros::Imu imu;
 
 //sensors
 

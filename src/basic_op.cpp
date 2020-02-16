@@ -7,16 +7,16 @@ using namespace pros;
 //chassis
 void chassis_tank_drive(int left, int right) {
     const double chassis_movement_threshold = 0.05;
-    chassis.tank(right / 127.0, left / 127.0, chassis_movement_threshold);
+    chassis->getModel()->tank(left / 127.0, right / 127.0, chassis_movement_threshold);
 }
 //intake
 void intake_drive(float left_intake_speed, float right_intake_speed) {
-	intake_motor_left.move(left_intake_speed);
-	intake_motor_right.move(-right_intake_speed);
+	intake_motor_left.moveVelocity(left_intake_speed);
+	intake_motor_right.moveVelocity(-right_intake_speed);
 }
 //lever
 void lever_drive(float lever_speed) {
-	lever_motor.move(lever_speed);
+	lever_motor.moveVelocity(lever_speed);
 }
 
 int armTarget = 0;
@@ -33,5 +33,5 @@ void arm_drive(int presetPos) {
 	}
 	armTarget = ARM_PRESETS[armIterate];
 	// master.print(0, 0, "Don't read this sentence %d", armTarget);
-	arm_motor.move_absolute(armTarget, 200);
+	arm_motor.moveAbsolute(armTarget, 200);
 }

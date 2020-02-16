@@ -7,8 +7,8 @@ using namespace pros;
 
 
 void gyroTest() {
-	if(master.get_digital_new_press(DIGITAL_X) > 0) {
-		std::cout << "Distance: " << gyro.get_value();
+	if(master.get_analog(E_CONTROLLER_ANALOG_LEFT_X) > 0) {
+		std::cout << "Distance: " << imu.get_rotation();
 	} 
 }
 
@@ -40,9 +40,10 @@ void arm_control() {
 		//original pos
 		armIterate = 0;
 		armPos = 0;
-		arm_motor.move_voltage(12000);
+		arm_motor.setBrakeMode(AbstractMotor::brakeMode::coast);
+		arm_motor.moveVoltage(12000);
 		pros::delay(500);
-		arm_motor.move_voltage(0);
+		arm_motor.moveVoltage(0);
 	}
 }
 
@@ -51,27 +52,27 @@ void arm_control2() {
 
 	if(master.get_digital(E_CONTROLLER_DIGITAL_B)) {
 
-		arm_motor.move_voltage(-12000);
-		arm_motor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+		arm_motor.moveVoltage(-12000);
+		arm_motor.setBrakeMode(AbstractMotor::brakeMode::hold);
 		// pros::delay(50);
 		// arm_motor.move_voltage(0);
 	} else if (master.get_digital(E_CONTROLLER_DIGITAL_A)) {
 
-		arm_motor.move_voltage(5000);
-		arm_motor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+		arm_motor.moveVoltage(5000);
+		arm_motor.setBrakeMode(AbstractMotor::brakeMode::hold);
 		// pros::delay(50);
 		// arm_motor.move_voltage(0);
 
 	} else if (master.get_digital(E_CONTROLLER_DIGITAL_X)) {
 
-		arm_motor.set_brake_mode(E_MOTOR_BRAKE_COAST);
-		arm_motor.move_voltage(12000);
+		arm_motor.setBrakeMode(AbstractMotor::brakeMode::coast);
+		arm_motor.moveVoltage(12000);
 		pros::delay(300);
-		arm_motor.move_voltage(0);
+		arm_motor.moveVoltage(0);
 
 	}  else if (armPos == 0) {
 		//so arm control 1&2 dont collide
-		arm_motor.move_voltage(0);
+		arm_motor.moveVoltage(0);
 	}
 
 }
@@ -112,9 +113,9 @@ int tray_speed = 12.5;
 void lever_control() {
 	if(master.get_digital(E_CONTROLLER_DIGITAL_R1)) {
 		intake_drive(24.0, 24.0);
-		if(lever_motor.get_position() < -1420) {
+		if(lever_motor.getPosition() < -1420) {
 			tray_speed = 10;
-		} else if(lever_motor.get_position() >= -1420) {
+		} else if(lever_motor.getPosition() >= -1420) {
 			tray_speed = 200;
 		}
 		lever_motor.moveAbsolute(leverEndPos, E_CONTROLLER_DIGITAL_R1*tray_speed);

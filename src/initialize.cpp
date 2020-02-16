@@ -10,11 +10,11 @@ using namespace okapi;
 
 okapi::Motor intake_motor_left(INTAKE_MOTOR_LEFT);
 okapi::Motor intake_motor_right(INTAKE_MOTOR_RIGHT);
-okapi::Motor lever_motor(LEVER_MOTOR, false, AbstractMotor::gearset::green);
-okapi::Motor arm_motor(ARM_MOTOR, false, AbstractMotor::gearset::green);
+okapi::Motor lever_motor(LEVER_MOTOR);
+okapi::Motor arm_motor(ARM_MOTOR);
 pros::Controller master (E_CONTROLLER_MASTER);
 
-pros::ADIGyro gyro(1);
+pros::Imu imu(1);
 
 // okapi::Motor chassis_right_rear(CHASSIS_RIGHT_REAR);
 // okapi::Motor chassis_right_front(CHASIIS_RIGHT_FRONT);
@@ -32,24 +32,37 @@ const auto CHASSIS_WIDTH = 9.3_in;
 //   {WHEEL_DIAMETER, CHASSIS_WIDTH}
 // );
 
-okapi::ChassisControllerPID chassis = ChassisControllerFactory::create(
-  {-CHASSIS_LEFT_FRONT, -CHASSIS_LEFT_REAR}, 
-  {CHASIIS_RIGHT_FRONT, CHASSIS_RIGHT_REAR},
+// auto chassis = ChassisControllerBuilder(
+//   {-CHASSIS_LEFT_FRONT, -CHASSIS_LEFT_REAR}, 
+//   {CHASIIS_RIGHT_FRONT, CHASSIS_RIGHT_REAR},
 
-    IterativePosPIDController::Gains{0.00420, 0.0000, 0.00000}, //distance
-    IterativePosPIDController::Gains{0.0024, 0.0005, 0.00002},  //angle
-    IterativePosPIDController::Gains{0.003, 0.0065, 0.000045},  //turn
+//     IterativePosPIDController::Gains{0.00420, 0.0000, 0.00000}, //distance
+//     IterativePosPIDController::Gains{0.0024, 0.0005, 0.00002},  //angle
+//     IterativePosPIDController::Gains{0.003, 0.0065, 0.000045},  //turn
 
-  AbstractMotor::gearset::green,
-  {WHEEL_DIAMETER, CHASSIS_WIDTH}
-);
+//   AbstractMotor::gearset::green,
+//   {WHEEL_DIAMETER, CHASSIS_WIDTH}
+// );
+
+std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder()
+		.withMotors( {-CHASSIS_LEFT_FRONT, -CHASSIS_LEFT_REAR}, {CHASIIS_RIGHT_FRONT, CHASSIS_RIGHT_REAR})
+		.withGains(
+			{0.001, 0.0004, 0.00001}, // Distance controller gains
+			{0.0001, 0.0001, 0.000}, // Turn controller gains
+			{0.002, 0.01, 0.000} // Angle controller gains (helps drive straight)
+		)
+		// green gearset, 4 inch wheel diameter, 8.125 inch wheelbase
+		.withDimensions(AbstractMotor::gearset::green, {{4_in, 8.125_in}, imev5GreenTPR})
+		// specify the tracking wheels diameter (2.75 in), track (4 in), and TPR (360)
+		.withOdometry({{2.75_in, 4.6_in}, quadEncoderTPR})
+		.buildOdometry(); // build an odometry chassis
 
 
 vector<AbstractMotor*>& get_motor_group() {
 	static vector<AbstractMotor*> motor_group;
 
-	auto left_motor = ((SkidSteerModel *)chassis.getChassisModel().get())->getLeftSideMotor();
-	auto right_motor = ((SkidSteerModel *)chassis.getChassisModel().get())->getRightSideMotor();
+	auto left_motor = ((SkidSteerModel *)chassis->getModel().get())->getLeftSideMotor();
+	auto right_motor = ((SkidSteerModel *)chassis->getModel().get())->getRightSideMotor();
 
 	motor_group.push_back(left_motor.get());
 	motor_group.push_back(right_motor.get());
