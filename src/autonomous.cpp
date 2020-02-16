@@ -70,38 +70,72 @@ void gyroRTurnR(double degree, double speed) {
 
 void imuNoSleuth(double degrees, double speed) {
     double cPos;
+    double degCoef = (17/18) * degrees;
     if(speed > 0) {
-        cPos = imu.get_rotation;
+        cPos = imu.get_rotation();
     } else if(speed < 0) {
-        cPos = abs((int)imu.get_rotation() - 360) % 360;
+        cPos = abs(int(imu.get_rotation() - 360)) % 360;
     }
     double tPos = degrees;
-    double aDelta = abs(tPos - cPos);
-    int threshold = 3;
+    double aDelta = tPos - cPos;
+    int threshold = 1;
     double speedCoef = 1;
 
     while(aDelta > threshold) {
-        if(1 > aDelta > 35) {
+        if(35 > aDelta > 53) {
             speedCoef = 1/2;
-        }
-        chassis->getModel()->tank(speedCoef * speed, -speedCoef * speed);
-
+        } else if(0 > aDelta > 34) {
+            speedCoef = 1/3;
+        } else if(aDelta < 0) {
+            speedCoef = -1/2;
+        } else {
+            speedCoef = 1;
+        } 
+        chassis->getModel()->tank(-speedCoef * speed/200, speedCoef * speed/200);
+        if(speed > 0) {
+            cPos = imu.get_rotation();
+        } else if(speed < 0) {
+            cPos = abs(int(imu.get_rotation() - 360)) % 360;
+       }
+        tPos = degrees;
+        aDelta = abs(tPos - cPos);
     }
-    pros::delay(200);
+
     if(aDelta > threshold) {
-        imuNoSleuth(degrees,-speed);
+        // imuNoSleuth(degCoef,-speed);
+        chassis->moveDistance(10_in);
     } else {
         chassis->getModel()->tank(0,0);
     }
     
 }
+void blue_close_auton() {
+    chassis->setMaxVelocity(100);
+    intake_drive(200,200);
+    pros::delay(500);
+    intake_drive(0,0);
+
+    arm_drive(1);
+    pros::delay(500);
+    arm_drive(0);
+
+    pros::delay(500);
+
+    intake_drive(-120,-120);
+    chassis->moveDistance(52_in);
+    intake_drive(-30,-30);
+
+    chassis->moveDistance(-38_in);
+    pros::delay(100);
+    intake_drive(200,200);
+    pros::delay(70);
+    imuNoSleuth(105, 70);
+
+}
 void autonomous() {
-    std::cout << "turn: " << imu.get_rotation();
     pros::delay(500);
     // recording::replay();
-    imuNoSleuth(90,200);
-    // gyroRTurn(270, -170);
-
+    blue_close_auton();
 
 }
 

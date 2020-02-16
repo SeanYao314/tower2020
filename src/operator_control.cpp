@@ -101,23 +101,23 @@ void intake_control() {
 	} else if(master.get_digital(E_CONTROLLER_DIGITAL_L2) && armPos > 0) {
 		//slower for scoring in towers
 		pros::delay(15);
-		intake_drive(69,69);
+		intake_drive(120,120);
 	} else {
 		intake_drive(0,0);
 	}
 }
-int leverEndPos = -2620;
-int leverStartPos= 69;
+int leverEndPos = -6550;
+int leverStartPos= 138;
 int tray_speed = 12.5;
 
 void lever_control() {
 	if(master.get_digital(E_CONTROLLER_DIGITAL_R1)) {
 		intake_drive(24.0, 24.0);
-		if(lever_motor.getPosition() < -1420) {
+		if(lever_motor.getPosition() < -3550) {
 			tray_speed = 10;
-		} else if(lever_motor.getPosition() >= -1420) {
+		} else if(lever_motor.getPosition() >= -3550) {
 			tray_speed = 200;
-		}
+		} 
 		lever_motor.moveAbsolute(leverEndPos, E_CONTROLLER_DIGITAL_R1*tray_speed);
 		//intake pushes out lever slightly
 	} else if(master.get_digital(E_CONTROLLER_DIGITAL_R2)) {

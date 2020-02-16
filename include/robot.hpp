@@ -27,7 +27,7 @@ const int LEVER_MOTOR = 16;
 const int ARM_MOTOR = 18;
 
 //arm varibles
-const int ARM_PRESETS[5]  = {0, -666, -734, -845, -1005};
+const int ARM_PRESETS[5]  = {0, -1732, -1868, -2090, -2410};
 const int ARM_PRESETS_LEN = 5;
 
 

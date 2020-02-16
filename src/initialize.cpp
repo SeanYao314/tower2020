@@ -47,9 +47,9 @@ const auto CHASSIS_WIDTH = 9.3_in;
 std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder()
 		.withMotors( {-CHASSIS_LEFT_FRONT, -CHASSIS_LEFT_REAR}, {CHASIIS_RIGHT_FRONT, CHASSIS_RIGHT_REAR})
 		.withGains(
-			{0.001, 0.0004, 0.00001}, // Distance controller gains
-			{0.0001, 0.0001, 0.000}, // Turn controller gains
-			{0.002, 0.01, 0.000} // Angle controller gains (helps drive straight)
+			{0.00001, 0.0004, 0.00001}, // Distance controller gains
+			{0.00001, 0.0001, 0.0001}, // Turn controller gains
+			{0.0002, 0.0001, 0.0001} // Angle controller gains (helps drive straight)
 		)
 		// green gearset, 4 inch wheel diameter, 8.125 inch wheelbase
 		.withDimensions(AbstractMotor::gearset::green, {{4_in, 8.125_in}, imev5GreenTPR})
