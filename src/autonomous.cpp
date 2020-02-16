@@ -1,10 +1,12 @@
 #include "robot.hpp"
 #include "recording.h"
+#include "screen.h"
 
 using namespace okapi;
 using namespace std;
+using namespace recording;
 
-
+void skill_auton();
 
 void gyroTurnL(double targetAngle, double speed) {
     int threshold = 10;
@@ -13,7 +15,7 @@ void gyroTurnL(double targetAngle, double speed) {
     int aDelta = abs(cPos - tPos);
     int delta = tPos - cPos;
 
-    cout << "the target position is " << tPos << endl;
+    std::cout << "the target position is " << tPos << endl;
 
     while (aDelta > threshold) {
         // double speedCoef = -(pow(1.0003, 2*(delta+5442.91139001))+226.996)/200;
@@ -43,7 +45,7 @@ void gyroTurnR(double targetAngle, double speed) {
     int aDelta = abs(cPos - tPos);
     int delta = tPos - cPos;
 
-    cout << "the target position is " << tPos << endl;
+    std::cout << "the target position is " << tPos << endl;
 
     while (aDelta > threshold) {
         // double speedCoef = -(pow(1.0003, 2*(delta+5442.91139001))+226.996)/200;
@@ -133,9 +135,13 @@ void blue_close_auton() {
 
 }
 void autonomous() {
+
+    auto program = screen::get_selected_program();
+    if (program == "Joker") {
+        skill_auton();
+    }
+
     pros::delay(500);
     // recording::replay();
     blue_close_auton();
-
 }
-

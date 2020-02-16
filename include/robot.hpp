@@ -30,6 +30,7 @@ const int ARM_MOTOR = 18;
 const int ARM_PRESETS[5]  = {0, -1732, -1868, -2090, -2410};
 const int ARM_PRESETS_LEN = 5;
 
+const int GYRO_PORT = 1;
 
 //chassis
 // extern okapi::Motor chassis_left_front;
@@ -42,9 +43,10 @@ extern okapi::Motor lever_motor;
 extern okapi::Motor arm_motor;
 extern pros::Controller master;
 extern std::shared_ptr<okapi::OdomChassisController> chassis;
-extern pros::Imu imu;
 
 //sensors
+extern pros::ADIGyro gyro;
+extern pros::Imu imu;
 
 //functions 
 void chassis_tank_drive(int left, int right);

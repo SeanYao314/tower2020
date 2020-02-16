@@ -15,7 +15,10 @@ okapi::Motor arm_motor(ARM_MOTOR);
 pros::Controller master (E_CONTROLLER_MASTER);
 
 pros::Imu imu(1);
+pros::ADIGyro gyro (GYRO_PORT);
 
+/* choose only one of the following: either separated chassis motors, or the chassis controller */
+//chassis motors
 // okapi::Motor chassis_right_rear(CHASSIS_RIGHT_REAR);
 // okapi::Motor chassis_right_front(CHASIIS_RIGHT_FRONT);
 // okapi::Motor chassis_left_rear(CHASSIS_LEFT_REAR);
@@ -61,15 +64,24 @@ std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder
 vector<AbstractMotor*>& get_motor_group() {
 	static vector<AbstractMotor*> motor_group;
 
-	auto left_motor = ((SkidSteerModel *)chassis->getModel().get())->getLeftSideMotor();
-	auto right_motor = ((SkidSteerModel *)chassis->getModel().get())->getRightSideMotor();
+	if (motor_group.size() == 0) {
+		auto left_motor = ((SkidSteerModel *)chassis->getModel().get())->getLeftSideMotor();
+		auto right_motor = ((SkidSteerModel *)chassis->getModel().get())->getRightSideMotor();
 
-	motor_group.push_back(left_motor.get());
-	motor_group.push_back(right_motor.get());
-	motor_group.push_back(&intake_motor_left);
-	motor_group.push_back(&intake_motor_right);
-	motor_group.push_back(&lever_motor);
-	motor_group.push_back(&arm_motor);
+		motor_group.push_back(left_motor.get());
+		motor_group.push_back(right_motor.get());
+
+		// motor_group.push_back(&chassis_left_front);
+		// motor_group.push_back(&chassis_left_rear);
+		// motor_group.push_back(&chassis_right_front);
+		// motor_group.push_back(&chassis_right_rear);
+
+		motor_group.push_back(&intake_motor_left);
+		motor_group.push_back(&intake_motor_right);
+		motor_group.push_back(&lever_motor);
+		motor_group.push_back(&arm_motor);
+	}
+
 	return motor_group;
 }
 
@@ -78,10 +90,20 @@ void notify_controller(const char * rumble_msg, const char * msg) {
 	master.print(0, 0, "%s", msg);
 }
 
+vector<recording::RecordUnit>& load_replaying() {
+	static vector<recording::RecordUnit> empty;
+	if (storage::is_slot_taken(screen::get_selected_program())) {
+		return storage::get_program(screen::get_selected_program());
+	} else {
+		return empty; 
+	}
+}
+
 void initialize()
 {
 	screen::setup_screen();
 	screen::set_notif_handler(notify_controller);
 	storage::load_all_programs();
 	recording::set_motor_group(get_motor_group());
+	recording::set_replay_loader(load_replaying);
 }

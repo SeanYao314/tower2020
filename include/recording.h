@@ -11,12 +11,6 @@ namespace recording {
     struct RecordUnit {
         short tick;
         std::vector<int> units;
-        short left;
-        short right;
-        short lever;
-        short left_intake;
-        short right_intake;
-        short arm;
     } ;
 
     void reset(int duration, int interval, void (*post_record_action)(void));

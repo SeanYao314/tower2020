@@ -6,6 +6,9 @@
 
 namespace recording {
 
+    void reset_chassis_encoders();
+    bool is_moving_straight(RecordUnit&);
+
     using namespace std;
     bool is_power_changed();
     void do_record();
@@ -95,11 +98,12 @@ namespace recording {
 
     void printout() {
         for (int i=0; i<=recording.size(); ++i) {
+            cout << "{";
             std::cout << recording[i].tick;
             for (int j=0; j<recording[i].units.size(); ++j) {
                 cout << ", " << recording[i].units[j];
             }
-            cout << endl;
+            cout << "}," << endl;
         }
     }
 
@@ -119,6 +123,8 @@ namespace recording {
         cout << "starting at " << starting_tick << " and end at " << ending_tick << " for total " 
                 << (ending_tick - starting_tick) * 50 / 1000 << " senconds" << endl;
 
+        reset_chassis_encoders();
+
         int r_index = 0;
         for (int t = starting_tick; t < ending_tick; ++t) {
             RecordUnit& unit = replay_recording[r_index];
@@ -129,10 +135,44 @@ namespace recording {
                 }
                 r_index ++;
             }
+
+            if (is_moving_straight(unit)) {
+                // compensate_chassis_motors();
+            }
             pros::delay(recording_interval);
         }
         cout << "replaying done !!" << endl;
     }
+
+    // void compensate_chassis_motors() {
+    //     double encoder_num_sum = 0;
+    //     for (int i=0; i<chassis_motor_numbers; ++i) {
+    //         encoder_num_sum += (*motor_group)[i]->getPosition();
+    //     }
+    //     double average_encode_value = encoder_num_sum / chassis_motor_numbers;
+    //     double encoder_delta_threshold = 10;
+    //     int motor_voltage_increment = 5;
+    //     for (int i=0; i<chassis_motor_numbers; ++i) {
+    //         if (abs(average_encode_value - (*motor_group)[i]->getPosition()) > encoder_delta_threshold) {
+
+    //         }
+    //     }
+    // }
+
+    // void reset_chassis_encoders() {
+    //     for (int i=0; i<chassis_motor_numbers; ++i) {
+    //         (*motor_group)[i]->tarePosition();
+    //     }
+    // }
+
+    // bool is_moving_straight(RecordUnit & ru) {
+    //     for (int i=1; i<chassis_motor_numbers; ++i) {
+    //         if (ru.units[i] != ru.units[0]) {
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
 
     vector<RecordUnit>& dump() {
         return recording;
