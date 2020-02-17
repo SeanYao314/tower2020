@@ -284,14 +284,14 @@ void replay_dp(vector<vector<int>>& data_points) {
 
 void skill_auton() {
     // raise_the_arm_and_release_anti_tip();
-    move_forward_take_9_cubes();
-    pros::delay(50);
+    // move_forward_take_9_cubes();
+    // pros::delay(50);
 
+    // turning(-45);
+    // pros::delay(50);
+
+    // move_forward(30, 0.5);
+    // pros::delay(50);
     turning(-45);
-    pros::delay(50);
-
-    move_forward(30, 0.5);
-    pros::delay(50);
-
     // stack_9_cubes();
 }

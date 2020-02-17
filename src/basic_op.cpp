@@ -7,7 +7,7 @@ using namespace pros;
 //chassis
 void chassis_tank_drive(int left, int right) {
     const double chassis_movement_threshold = 0.05;
-    chassis->getModel()->tank(left / 127.0, right / 127.0, chassis_movement_threshold);
+    chassis->getModel()->tank(right / 127.0, left / 127.0, chassis_movement_threshold);
 }
 //intake
 void intake_drive(float left_intake_speed, float right_intake_speed) {

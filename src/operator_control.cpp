@@ -77,6 +77,7 @@ void arm_control2() {
 	}
 
 }
+
 //for chassis
 void chassis_control() {
 	int left_power = master.get_analog(ANALOG_LEFT_Y);
@@ -107,7 +108,7 @@ void intake_control() {
 	} else if(master.get_digital(E_CONTROLLER_DIGITAL_L2) && armPos > 0) {
 		//slower for scoring in towers
 		pros::delay(15);
-		intake_drive(120,120);
+		intake_drive(96,96);
 	} else {
 		intake_drive(0,0);
 	}
