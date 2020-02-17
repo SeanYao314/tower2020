@@ -111,7 +111,8 @@ void imuNoSleuth(double degrees, double speed) {
     }
     
 }
-void blue_close_auton() {
+void blue_unprotect() {
+    
     chassis->setMaxVelocity(100);
     intake_drive(200,200);
     pros::delay(500);
@@ -153,14 +154,71 @@ void blue_close_auton() {
     intake_drive(0,0);
 
 }
+void red_unprotect() {
+    chassis->setMaxVelocity(100);
+    intake_drive(200,200);
+    pros::delay(500);
+    intake_drive(0,0);
+
+    arm_drive(1);
+    pros::delay(410);
+    arm_drive(0);
+
+    pros::delay(500);
+
+    intake_drive(-140,-140);
+    chassis->moveDistance(46_in); //smaller because 6096A anti tip pushes out robot
+    intake_drive(-25,-25);
+
+    chassis->moveDistance(-33_in);
+    pros::delay(100);
+    intake_drive(200,200);
+    pros::delay(70);
+    intake_drive(0,0);
+    imuNoSleuth(-105, 70);
+    chassis->moveDistance(8_in);
+    pros::delay(200);
+    intake_drive(20,20);
+
+    lever_drive(-200);
+    pros::delay(1800);
+    lever_drive(0);
+
+    intake_drive(0,0);
+
+    lever_drive(-50);
+    pros::delay(700);
+    lever_drive(0);
+
+    chassis->setMaxVelocity(200);
+    intake_drive(200,200);
+    chassis->moveDistance(-10_in);
+    intake_drive(0,0);
+}
+
+void blue_protect() {
+
+}
+
+void red_protect() {
+
+}
+
 void autonomous() {
 
     auto program = screen::get_selected_program();
     if (program == "Joker") {
         skill_auton();
+        return;
+    } else if (program == "Alpha") {
+        blue_unprotect();
+        return;
+    } else if (program == "Beta") {
+        blue_protect();
+    } else if (program == "Kilo") {
+        red_unprotect();
+    } else if (program == "Lima") {
+        red_protect();
     }
 
-    pros::delay(500);
-    // recording::replay();
-    blue_close_auton();
 }
