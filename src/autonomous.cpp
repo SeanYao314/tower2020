@@ -135,23 +135,23 @@ void imuNoSleuth(double degrees, double speed) {
     } else {
         chassis->getModel()->tank(0,0);
     }
-    
 }
+
 void red_unprotect() {
     chassis->getModel()->tank(200,200);
-    pros::delay(180);
+    pros::delay(100);
     chassis->getModel()->tank(0,0);
-
     arm_drive(4);
-    pros::delay(360);
+    pros::delay(90);
     intake_drive(200,200);
-    pros::delay(150);
+    pros::delay(130);
     arm_drive(0);
+
     intake_drive(0,0);
 
-    chassis->setMaxVelocity(56);
-    intake_drive(-180,-180);
-    chassis->moveDistance(34_in); //smaller because 6096A anti tip pushes out robot
+    chassis->setMaxVelocity(66);
+    intake_drive(-190,-190);
+    chassis->moveDistance(36_in); //smaller because 6096A anti tip pushes out robot
     intake_drive(-50,-50);
 
     // imuNoSleuth(175,90);
@@ -160,27 +160,29 @@ void red_unprotect() {
     // intake_drive(0,0);
     // chassis->moveDistance(48.63_in);
 
-    chassis->moveDistance(-31_in);
+    chassis->moveDistance(-23_in);
     pros::delay(200);
 
     intake_drive(200,200);
     pros::delay(70);
     intake_drive(0,0);
 
-
-    imuNoSleuth(95, 100);
-    pros::delay(200);
+    chassis->setMaxVelocity(2000);
+    chassis->turnAngle(-189_deg);
 
     chassis->setMaxVelocity(200);
-    chassis->getModel()->tank(200);
-    pros::delay(950);
+    chassis->getModel()->tank(100,200);
+    pros::delay(450);
     chassis->getModel()->tank(0,0);
-    intake_drive(20,20);
+    intake_drive(40,40);
     
+    chassis->getModel()->tank(0.07,0.21);
 
     lever_drive(-200);
-    pros::delay(1600);
+    pros::delay(1700);
     lever_drive(0);
+
+    chassis->getModel()->tank(0,0);
 
     intake_drive(0,0);
 
@@ -190,9 +192,10 @@ void red_unprotect() {
 
 
     chassis->getModel()->tank(100,100);
-    pros::delay(50);
+    pros::delay(90);
     chassis->getModel()->tank(0,0);
     intake_drive(200,200);
+    pros::delay(100);
     chassis->getModel()->tank(-140,-140);
     pros::delay(400);
     chassis->getModel()->tank(0,0);
@@ -203,21 +206,21 @@ void red_unprotect() {
     lever_drive(0);
 }
 void blue_unprotect() {
-     chassis->getModel()->tank(200,200);
-    pros::delay(180);
+   chassis->getModel()->tank(200,200);
+    pros::delay(100);
     chassis->getModel()->tank(0,0);
-
     arm_drive(4);
-    pros::delay(430);
+    pros::delay(90);
     intake_drive(200,200);
-    pros::delay(120);
+    pros::delay(130);
     arm_drive(0);
+
     intake_drive(0,0);
 
-    chassis->setMaxVelocity(56);
-    intake_drive(-180,-180);
-    chassis->moveDistance(38_in); //smaller because 6096A anti tip pushes out robot
-    intake_drive(-25,-25);
+    chassis->setMaxVelocity(66);
+    intake_drive(-190,-190);
+    chassis->moveDistance(36_in); //smaller because 6096A anti tip pushes out robot
+    intake_drive(-50,-50);
 
     // imuNoSleuth(175,90);
     // intake_drive(200, 200);
@@ -225,27 +228,29 @@ void blue_unprotect() {
     // intake_drive(0,0);
     // chassis->moveDistance(48.63_in);
 
-    chassis->moveDistance(-30_in);
-    pros::delay(100);
-
-    intake_drive(200,200);
-    pros::delay(90);
-    intake_drive(0,0);
-
-    
-    imuNoSleuth(107, -70);
+    chassis->moveDistance(-23_in);
     pros::delay(200);
 
+    intake_drive(200,200);
+    pros::delay(70);
+    intake_drive(0,0);
+
+    chassis->setMaxVelocity(2000);
+    chassis->turnAngle(189_deg);
+
     chassis->setMaxVelocity(200);
-    chassis->getModel()->tank(0,200);
-    pros::delay(400);
+    chassis->getModel()->tank(100,200);
+    pros::delay(450);
     chassis->getModel()->tank(0,0);
-    intake_drive(20,20);
+    intake_drive(40,40);
     
+    chassis->getModel()->tank(0.21,0.7);
 
     lever_drive(-200);
-    pros::delay(1600);
+    pros::delay(1400);
     lever_drive(0);
+
+    chassis->getModel()->tank(0,0);
 
     intake_drive(0,0);
 
@@ -254,11 +259,12 @@ void blue_unprotect() {
     lever_drive(0);
 
 
-    chassis->getModel()->tank(200,200);
-    pros::delay(100);
+    chassis->getModel()->tank(100,100);
+    pros::delay(90);
     chassis->getModel()->tank(0,0);
     intake_drive(200,200);
-    chassis->getModel()->tank(-200,-200);
+    pros::delay(100);
+    chassis->getModel()->tank(-140,-140);
     pros::delay(400);
     chassis->getModel()->tank(0,0);
     intake_drive(0,0);
@@ -269,11 +275,121 @@ void blue_unprotect() {
 }
 
 void red_protect() {
+    intake_drive(-100,-100);
+    chassis->getModel()->tank(0.32,0.32);
+    arm_drive(4);
+    pros::delay(270);
+    arm_drive(0);
+    pros::delay(1100);
+    chassis->getModel()->tank(0,0);
 
+    //turn
+    pros::delay(400);
+    chassis->setMaxVelocity(1900);
+    chassis->turnAngle(131_deg);
+
+    chassis->setMaxVelocity(70);
+
+    //intake
+    intake_drive(-70,-70);
+    chassis->moveDistance(23_in);
+
+    intake_drive(-30,-30);
+    chassis->moveDistance(-9_in);
+    //turn
+    chassis->setMaxVelocity(1600);
+    chassis->turnAngle(59_deg);
+
+    intake_drive(200,200);
+    pros::delay(120);
+    intake_drive(0,0);
+
+    //stack & release
+    chassis->setMaxVelocity(200);
+    chassis->getModel()->tank(0.3,0.5);
+    pros::delay(1260);
+    chassis->getModel()->tank(0,0);
+    intake_drive(30,30);
+    chassis->getModel()->tank(0.07,0.21);
+    lever_drive(-200);
+    pros::delay(1700);
+    lever_drive(0);
+    chassis->getModel()->tank(0,0);
+    intake_drive(0,0);
+    lever_drive(-50);
+    pros::delay(900);
+    lever_drive(0);
+    chassis->getModel()->tank(100,100);
+    pros::delay(90);
+    chassis->getModel()->tank(0,0);
+    intake_drive(200,200);
+    pros::delay(100);
+    chassis->getModel()->tank(-140,-140);
+    pros::delay(400);
+    chassis->getModel()->tank(0,0);
+    intake_drive(0,0);
+    lever_drive(200);
+    pros::delay(2000);
+    lever_drive(0);
 }
 
 void blue_protect() {
+      intake_drive(-100,-100);
+    chassis->getModel()->tank(0.32,0.32);
+    arm_drive(4);
+    pros::delay(270);
+    arm_drive(0);
+    pros::delay(1100);
+    chassis->getModel()->tank(0,0);
 
+    //turn
+    pros::delay(400);
+    chassis->setMaxVelocity(1900);
+    chassis->turnAngle(-125_deg);
+
+    chassis->setMaxVelocity(70);
+
+    //intake
+    intake_drive(-70,-70);
+    chassis->moveDistance(23_in);
+
+    intake_drive(-30,-30);
+    chassis->moveDistance(-9_in);
+    //turn
+    chassis->setMaxVelocity(1800);
+    chassis->turnAngle(-53_deg);
+
+    intake_drive(200,200);
+    pros::delay(120);
+    intake_drive(0,0);
+
+    //stack & release
+    chassis->setMaxVelocity(200);
+    chassis->getModel()->tank(0.5,0.3);
+    pros::delay(1060);
+    chassis->getModel()->tank(0,0);
+    intake_drive(30,30);
+    chassis->getModel()->tank(0.21,0.7);
+    lever_drive(-200);
+    pros::delay(1700);
+    lever_drive(0);
+    chassis->getModel()->tank(0,0);
+    intake_drive(0,0);
+    lever_drive(-50);
+    pros::delay(900);
+    lever_drive(0);
+    chassis->getModel()->tank(100,100);
+    pros::delay(90);
+    chassis->getModel()->tank(0,0);
+    intake_drive(200,200);
+    pros::delay(100);
+    chassis->getModel()->tank(-140,-140);
+    pros::delay(400);
+    chassis->getModel()->tank(0,0);
+    intake_drive(0,0);
+    lever_drive(200);
+    pros::delay(2000);
+    lever_drive(0);
 }
 
 void autonomous() {
@@ -292,8 +408,7 @@ void autonomous() {
     } else if (program == "Lima") {
         red_protect();
     } else {
-        red_unprotect();
-
+        blue_unprotect();
     }
 
 }

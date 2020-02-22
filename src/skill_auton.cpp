@@ -8,7 +8,6 @@ using namespace recording;
 void replay_dp(vector<vector<int>>&);
 void turning(int);
 
-/*
 double exponential_speed_calculation(int distance_in_tick, double max_speed, double min_speed) {
     
     double exp_speed = pow(abs(distance_in_tick), 1 / 3.0) / 20.0;
@@ -24,12 +23,13 @@ double exponential_speed_calculation(int distance_in_tick, double max_speed, dou
 }
 
 void move_straight(double distance_in_inch, double power) {
+    const double pi = 3.14159265358979323846;
     const double inch_per_tick = 0.013962634015955;
     const double threshold = 0.5 / inch_per_tick;
     int target_position = distance_in_inch / inch_per_tick;
 
-    auto left_motor = ((SkidSteerModel *)chassis.getChassisModel().get())->getLeftSideMotor();
-	auto right_motor = ((SkidSteerModel *)chassis.getChassisModel().get())->getRightSideMotor();    
+    auto left_motor = ((SkidSteerModel *)chassis->getModel().get())->getLeftSideMotor();
+    auto right_motor = ((SkidSteerModel *)chassis->getModel().get())->getRightSideMotor();
 
     left_motor->tarePosition();
     right_motor->tarePosition();
@@ -52,13 +52,13 @@ void move_straight(double distance_in_inch, double power) {
         double current_position = gyro.get_value();
         double delta_degree = (current_position - initial_position) / 10;
 
-        if (sin(delta_degree) > sin(5)) {
-            left_coef *= 0.99;
-            right_coef *= 1.01;            
+        if (sin(delta_degree / 180 * pi) > sin(5 / 180 * pi)) {
+            left_coef *= 0.999;
+            right_coef *= 1.001;
             std::cout << ">>> drift right, left_coef = " << left_coef << ", right_coef = " << right_coef << endl;
-        } else if (sin(delta_degree) < sin(-5)) {
-            left_coef *= 1.01;
-            right_coef *= 0.99;  
+        } else if (sin(delta_degree / 180 * pi) < sin(-5 / 180 * pi)) {
+            left_coef *= 1.001;
+            right_coef *= 0.999;
             cout << "<<< drift left, left_coef = " << left_coef << ", right_coef = " << right_coef << endl;
         } else {
             cout << "moving straight, left_coef = " << left_coef << ", right_coef = " << right_coef << endl;
@@ -66,7 +66,7 @@ void move_straight(double distance_in_inch, double power) {
         left_power *= left_coef;
         right_power *= right_coef;
 
-        chassis.tank(left_power, right_power);
+        chassis->getModel()->tank(left_power, right_power);
         pros::delay(20);
 
         int current_encoder_position = max(abs(left_motor->getPosition()), abs(right_motor->getPosition()));
@@ -75,9 +75,10 @@ void move_straight(double distance_in_inch, double power) {
         cout << "left power = " << left_power << ", right power = " << right_power << endl;
         // cout << "old delta = " << old_delta << ", new delta = " << new_delta << endl;
     }
-    chassis.stop();
+    chassis->stop();
 }
 
+/*
 void autonomous() {
     // recording::replay();
     move_straight(24, 0.5);
@@ -283,15 +284,16 @@ void replay_dp(vector<vector<int>>& data_points) {
 }
 
 void skill_auton() {
-    // raise_the_arm_and_release_anti_tip();
-    // move_forward_take_9_cubes();
-    // pros::delay(50);
+    raise_the_arm_and_release_anti_tip();
+    move_forward_take_9_cubes();
+    pros::delay(50);
 
     // turning(-45);
     // pros::delay(50);
 
     // move_forward(30, 0.5);
     // pros::delay(50);
-    turning(-45);
+    // move_straight(72, 0.5);
+    // turning(-45);
     // stack_9_cubes();
 }
