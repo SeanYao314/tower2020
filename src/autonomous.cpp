@@ -135,8 +135,8 @@ void imuNoSleuth(double degrees, double speed) {
     } else {
         chassis->getModel()->tank(0,0);
     }
-    
 }
+
 void red_unprotect() {
     chassis->getModel()->tank(200,200);
     pros::delay(100);
@@ -293,9 +293,9 @@ void red_protect() {
     //intake
     intake_drive(-70,-70);
     chassis->moveDistance(23_in);
-
     intake_drive(-30,-30);
     chassis->moveDistance(-9_in);
+  
     //turn
     chassis->setMaxVelocity(1600);
     chassis->turnAngle(59_deg);
@@ -334,7 +334,7 @@ void red_protect() {
 }
 
 void blue_protect() {
-      intake_drive(-100,-100);
+    intake_drive(-100,-100);
     chassis->getModel()->tank(0.32,0.32);
     arm_drive(4);
     pros::delay(270);
@@ -346,7 +346,7 @@ void blue_protect() {
     pros::delay(400);
     chassis->setMaxVelocity(1900);
     chassis->turnAngle(-125_deg);
-
+  
     chassis->setMaxVelocity(70);
 
     //intake
@@ -408,7 +408,8 @@ void autonomous() {
     } else if (program == "Lima") {
         red_protect();
     } else {
-        blue_unprotect();
+        skill_auton();
+        // blue_unprotect();
     }
 
 }
