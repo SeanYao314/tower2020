@@ -334,7 +334,7 @@ void red_protect() {
 }
 
 void blue_protect() {
-      intake_drive(-100,-100);
+    intake_drive(-100,-100);
     chassis->getModel()->tank(0.32,0.32);
     arm_drive(4);
     pros::delay(270);
@@ -408,7 +408,8 @@ void autonomous() {
     } else if (program == "Lima") {
         red_protect();
     } else {
-        blue_unprotect();
+        skill_auton();
+        // blue_unprotect();
     }
 
 }

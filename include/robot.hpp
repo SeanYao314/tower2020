@@ -30,7 +30,7 @@ const int ARM_MOTOR = 18;
 const int ARM_PRESETS[5]  = {0, -1732, -1868, -2090, -2410};
 const int ARM_PRESETS_LEN = 5;
 
-const int GYRO_PORT = 1;
+const int GYRO_PORT = 8;
 
 //chassis
 // extern okapi::Motor chassis_left_front;
