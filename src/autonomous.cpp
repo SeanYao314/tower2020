@@ -293,9 +293,9 @@ void red_protect() {
     //intake
     intake_drive(-70,-70);
     chassis->moveDistance(23_in);
-
     intake_drive(-30,-30);
     chassis->moveDistance(-9_in);
+  
     //turn
     chassis->setMaxVelocity(1600);
     chassis->turnAngle(59_deg);
@@ -346,7 +346,7 @@ void blue_protect() {
     pros::delay(400);
     chassis->setMaxVelocity(1900);
     chassis->turnAngle(-125_deg);
-
+  
     chassis->setMaxVelocity(70);
 
     //intake
