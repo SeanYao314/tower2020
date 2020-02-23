@@ -97,6 +97,10 @@ void raise_the_arm_and_release_anti_tip() {
     chassis->stop();
 }
 
+void leverBack() {
+
+}
+
 void move_forward_take_9_cubes() {
     vector<vector<int>> data_points = {
         {23,1000,1000,0,0,0,0},
@@ -108,10 +112,11 @@ void move_forward_take_9_cubes() {
         {29,3200,3200,0,0,0,0},
         {30,3600,3600,0,0,0,0},
         {31,4000,4000,0,0,0,0},
-        {32,4000,4000,-12000,12000,0,0},
+        {32,4000,3500,-12000,12000,0,0},
+        {53,4000,4000,-12000,12000,0,0},
         {82,4000,2500,-12000,12000,0,0},
         {102,2500,4000,-12000,12000,0,0},
-        {122,4000,4000,-12000,12000,0,0},
+        {118,4000,4000,-12000,12000,0,0},
         {189,0,0,-12000,12000,0,0},
         {190,0,0,-12000,12000,0,0}
         };
@@ -320,20 +325,55 @@ void skill_auton() {
     // chassis->stop();
     // pros::delay(50);
 
-    // turning(-45, 0.25);
+    // turning(-35, 0.25);
     // pros::delay(100);
 
     // move_forward(25, 0.5);
     // pros::delay(50);
+    // intake_drive(-200,-200);
+    // pros::delay(900);
+    // intake_drive(0,0);
+    // pros::delay(500);
+
     // stack_9_cubes();
 
     // chassis->stop();
     
-    turning(90, 0.3);
-    pros::delay(200);
-    turning(20, 0.3);
+    // turning(90, 0.3);
+    // pros::delay(200);
+    // turning(15, 0.3);
+    // pros::delay(200);
+
+    lever_drive(200);
+    intake_drive(-120,-120);
+    chassis->getModel()->tank(0.4,0.2);
+    pros::delay(1000);
+    chassis->getModel()->tank(0.2,0.4);
+    lever_drive(0);
+    pros::delay(1000);
+    move_forward(25,0.4);
+    pros::delay(100);
+
+    intake_drive(200,200);
+    pros::delay(100);
+    intake_drive(0,0);
+
+
+    move_forward(12, -0.3);
+
+    intake_drive(0,0);
+    arm_drive(4);
     pros::delay(200);
 
-    move_forward(30, -0.3);
+    move_forward(26, 0.2);
+    intake_drive(100,100);
+    pros::delay(750);
+    intake_drive(0,0);
+
+    move_forward(10, -0.3);
+    pros::delay(100);
+
+    arm_drive(0);
+
     chassis->stop();
 }
