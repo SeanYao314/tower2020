@@ -78,6 +78,7 @@ void arm_control2() {
 
 }
 
+
 //for chassis
 void chassis_control() {
 	int left_power = master.get_analog(ANALOG_LEFT_Y);
@@ -116,14 +117,17 @@ void intake_control() {
 int leverEndPos = -6550;
 int leverStartPos= 138;
 int tray_speed = 12.5;
+int intakeSpeed = 34.0;
 
 void lever_control() {
 	if(master.get_digital(E_CONTROLLER_DIGITAL_R1)) {
-		intake_drive(24.0, 24.0);
+		intake_drive(intakeSpeed, intakeSpeed);
 		if(lever_motor.getPosition() < -3550) {
 			tray_speed = 10;
+			intakeSpeed = 0;
 		} else if(lever_motor.getPosition() >= -3550) {
 			tray_speed = 200;
+			intakeSpeed = 34.0;
 		} 
 		lever_motor.moveAbsolute(leverEndPos, E_CONTROLLER_DIGITAL_R1*tray_speed);
 		//intake pushes out lever slightly

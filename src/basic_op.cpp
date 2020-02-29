@@ -23,10 +23,6 @@ int armTarget = 0;
 int armIterate = 0;
 
 void arm_drive(int presetPos) {
-	//so arm doesn't click w/ gear
-	lever_drive(-200);
-	pros::delay(50);
-	lever_drive(0);
 	armIterate = presetPos;
 	if (armIterate >= ARM_PRESETS_LEN) {
 		armIterate = ARM_PRESETS_LEN;

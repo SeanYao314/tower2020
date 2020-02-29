@@ -70,9 +70,8 @@ void skill_auton();
 //     gyroTurnR(degree+(cPos/10), speed);
 // }
 
-void turningGyro(int degrees) {
+void gyroTurning(int degrees, double chassis_power) {
     const double pi = 3.14159265358979323846;
-    const double chassis_power = 0.5;
     double current_pos = gyro.get_value() / 10.0;
     double target_pos = current_pos + degrees;
 
@@ -83,9 +82,9 @@ void turningGyro(int degrees) {
     while (current_delta <= last_delta) {
         last_delta = current_delta;
         if (delta < 0) {
-            chassis->getModel()->tank(-chassis_power, chassis_power);
-        } else {
             chassis->getModel()->tank(chassis_power, -chassis_power);
+        } else {
+            chassis->getModel()->tank(-chassis_power, chassis_power);
         }
         current_pos = gyro.get_value() / 10;
         current_delta = abs(sin((target_pos - current_pos) / 180 * pi));
@@ -94,6 +93,14 @@ void turningGyro(int degrees) {
         pros::delay(20);
     }
     chassis->getModel()->stop();
+}
+
+void moveForwardPower(int cycles, double power) {
+    for (int i=0; i<cycles; ++i) {
+        chassis->getModel()->tank(power, power);
+        pros::delay(50);
+    }
+    chassis->stop();
 }
 
 void imuNoSleuth(double degrees, double speed) {
@@ -137,6 +144,8 @@ void imuNoSleuth(double degrees, double speed) {
     }
 }
 
+/* ------------START OF AUTONS--------------- */
+/* ------------RED 5 CUBES--------------- */
 void red_unprotect() {
     chassis->getModel()->tank(200,200);
     pros::delay(100);
@@ -205,8 +214,9 @@ void red_unprotect() {
     pros::delay(2000);
     lever_drive(0);
 }
+/* ------------BLUE 5 CUBE--------------- */
 void blue_unprotect() {
-   chassis->getModel()->tank(200,200);
+    chassis->getModel()->tank(200,200);
     pros::delay(100);
     chassis->getModel()->tank(0,0);
     arm_drive(4);
@@ -236,7 +246,7 @@ void blue_unprotect() {
     intake_drive(0,0);
 
     chassis->setMaxVelocity(2000);
-    chassis->turnAngle(189_deg);
+    chassis->turnAngle(200_deg);
 
     chassis->setMaxVelocity(200);
     chassis->getModel()->tank(100,200);
@@ -244,7 +254,7 @@ void blue_unprotect() {
     chassis->getModel()->tank(0,0);
     intake_drive(40,40);
     
-    chassis->getModel()->tank(0.21,0.7);
+    chassis->getModel()->tank(0.07,0.04);
 
     lever_drive(-200);
     pros::delay(1400);
@@ -259,8 +269,8 @@ void blue_unprotect() {
     lever_drive(0);
 
 
-    chassis->getModel()->tank(100,100);
-    pros::delay(90);
+    chassis->getModel()->tank(200,200);
+    pros::delay(160);
     chassis->getModel()->tank(0,0);
     intake_drive(200,200);
     pros::delay(100);
@@ -273,14 +283,14 @@ void blue_unprotect() {
     pros::delay(2000);
     lever_drive(0);
 }
-
+/* ------------RED 3 CUBE-------------- */
 void red_protect() {
-    intake_drive(-100,-100);
-    chassis->getModel()->tank(0.32,0.32);
+    intake_drive(-130,-130);
+    chassis->getModel()->tank(0.34,0.34);
     arm_drive(4);
-    pros::delay(270);
+    pros::delay(340);
     arm_drive(0);
-    pros::delay(1100);
+    pros::delay(1280);
     chassis->getModel()->tank(0,0);
 
     //turn
@@ -291,14 +301,14 @@ void red_protect() {
     chassis->setMaxVelocity(70);
 
     //intake
-    intake_drive(-70,-70);
+    intake_drive(-80,-80);
     chassis->moveDistance(23_in);
     intake_drive(-30,-30);
-    chassis->moveDistance(-9_in);
+    chassis->moveDistance(-11_in);
   
     //turn
     chassis->setMaxVelocity(1600);
-    chassis->turnAngle(59_deg);
+    chassis->turnAngle(61_deg);
 
     intake_drive(200,200);
     pros::delay(120);
@@ -306,11 +316,11 @@ void red_protect() {
 
     //stack & release
     chassis->setMaxVelocity(200);
-    chassis->getModel()->tank(0.3,0.5);
-    pros::delay(1260);
+    chassis->getModel()->tank(0.3,0.6);
+    pros::delay(1270);
     chassis->getModel()->tank(0,0);
     intake_drive(30,30);
-    chassis->getModel()->tank(0.07,0.21);
+    chassis->getModel()->tank(0.04,0.12);
     lever_drive(-200);
     pros::delay(1700);
     lever_drive(0);
@@ -329,23 +339,23 @@ void red_protect() {
     chassis->getModel()->tank(0,0);
     intake_drive(0,0);
     lever_drive(200);
-    pros::delay(2000);
+    pros::delay(1700);
     lever_drive(0);
 }
-
+/* ------------BLUE 3 CUBE--------------- */
 void blue_protect() {
     intake_drive(-100,-100);
     chassis->getModel()->tank(0.32,0.32);
     arm_drive(4);
     pros::delay(270);
     arm_drive(0);
-    pros::delay(1100);
+    pros::delay(1200);
     chassis->getModel()->tank(0,0);
 
     //turn
     pros::delay(400);
     chassis->setMaxVelocity(1900);
-    chassis->turnAngle(-125_deg);
+    chassis->turnAngle(-126_deg);
   
     chassis->setMaxVelocity(70);
 
@@ -384,7 +394,7 @@ void blue_protect() {
     intake_drive(200,200);
     pros::delay(100);
     chassis->getModel()->tank(-140,-140);
-    pros::delay(400);
+    pros::delay(200);
     chassis->getModel()->tank(0,0);
     intake_drive(0,0);
     lever_drive(200);
@@ -392,6 +402,89 @@ void blue_protect() {
     lever_drive(0);
 }
 
+/* ------------8 CUBE RED--------------- */
+void red_eight_cube() {
+    chassis->getModel()->tank(200,200);
+    pros::delay(100);
+    chassis->getModel()->tank(0,0);
+    arm_drive(4);
+    pros::delay(230);
+    intake_drive(200,200);
+    pros::delay(130);
+    arm_drive(0);
+
+    chassis->setMaxVelocity(50);
+    intake_drive(-200,-200);
+    chassis->moveDistance(25_in);
+    
+    intake_drive(-40,-40);
+
+    chassis->setMaxVelocity(700);
+    chassis->turnAngle(54_deg);
+    chassis->setMaxVelocity(92);
+
+    chassis->moveDistance(-24_in);
+
+    chassis->setMaxVelocity(700);
+    chassis->turnAngle(-21_deg);
+    chassis->setMaxVelocity(92);
+
+    chassis->getModel()->tank(-0.5,-0.2);
+    pros::delay(700);
+    chassis->getModel()->tank(-0.1,-0.1);
+    pros::delay(200);
+    chassis->getModel()->tank(0,0);
+
+    chassis->setMaxVelocity(86);
+    intake_drive(-180,-180);
+    chassis->moveDistance(43_in);
+    intake_drive(-50,-50);
+
+    chassis->moveDistance(-24_in);
+    pros::delay(200);
+
+    intake_drive(200,200);
+    pros::delay(70);
+    intake_drive(0,0);
+
+    chassis->setMaxVelocity(2000);
+    chassis->turnAngle(-183_deg);
+
+    chassis->setMaxVelocity(200);
+    chassis->getModel()->tank(100,200);
+    pros::delay(450);
+    chassis->getModel()->tank(0,0);
+    intake_drive(40,40);
+    
+    chassis->getModel()->tank(0.07,0.21);
+
+    lever_drive(-200);
+    pros::delay(1700);
+    lever_drive(0);
+
+    chassis->getModel()->tank(0,0);
+
+    intake_drive(0,0);
+
+    lever_drive(-50);
+    pros::delay(900);
+    lever_drive(0);
+
+
+    chassis->getModel()->tank(100,100);
+    pros::delay(90);
+    chassis->getModel()->tank(0,0);
+    intake_drive(200,200);
+    pros::delay(100);
+    chassis->getModel()->tank(-140,-140);
+    pros::delay(400);
+    chassis->getModel()->tank(0,0);
+    intake_drive(0,0);
+
+    lever_drive(200);
+    pros::delay(2000);
+    lever_drive(0);
+}
 void autonomous() {
 
     auto program = screen::get_selected_program();
@@ -408,8 +501,7 @@ void autonomous() {
     } else if (program == "Lima") {
         red_protect();
     } else {
-        skill_auton();
-        // blue_unprotect();
+        red_eight_cube();
     }
 
 }

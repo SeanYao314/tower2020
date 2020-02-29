@@ -91,9 +91,9 @@ void raise_the_arm_and_release_anti_tip() {
     intake_drive(-100,-100);
     chassis->getModel()->tank(0.32,0.32);
     arm_drive(4);
-    pros::delay(290);
+    pros::delay(200);
     arm_drive(0);
-    pros::delay(1100);
+    pros::delay(400);
     chassis->stop();
 }
 
@@ -249,14 +249,6 @@ void stack_9_cubes() {
 {114, -203, -136, 0, -6, 6, -6},
 {115, -6, 0, 0, 0, 0, 0},
 {157, 12, 0, -6, 0, 0, 0},
-{158, -6, -6, 0, 0, 0, 0},
-{184, 0, -6, 0, 18, 6, -6},
-{185, 6, -6, 6, 0, 6, 0},
-{242, -6, -12, -12, 0, 6, 0},
-{248, -6, -12, 6, 0, 0, 0},
-{268, 6, 6, -6, -6, 0, 0},
-{281, 0, -12, 0, 0, 0, 6},
-{217, -407, -228, 715, -715, -166, 0}
         };
     replay_dp(data_points);
 }
@@ -319,31 +311,49 @@ void replay_dp(vector<vector<int>>& data_points) {
     }
 }
 
+void ten_Cubes() {
+    intake_drive(-200,-200);
+    move_forward(65, 0.3);
+    chassis->getModel()->tank(0.4,0.2);
+    pros::delay(800);
+    chassis->getModel()->tank(0.2,0.4);
+    pros::delay(1200);
+    chassis->getModel()->tank(0.4,0.2);
+    pros::delay(300);
+    chassis->getModel()->tank(0.2,0.4);
+    pros::delay(300);
+    chassis->getModel()->tank(0,0);
+    move_forward(80,0.3);
+}
+
 void skill_auton() {
-    // raise_the_arm_and_release_anti_tip();
-    // move_forward_take_9_cubes();
-    // chassis->stop();
-    // pros::delay(50);
+    raise_the_arm_and_release_anti_tip();
+    ten_Cubes();
+    move_forward_take_9_cubes();
+    chassis->stop();
+    pros::delay(50);
 
-    // turning(-35, 0.25);
-    // pros::delay(100);
+    turning(-35, 0.25);
+    pros::delay(100);
 
-    // move_forward(25, 0.5);
-    // pros::delay(50);
-    // intake_drive(-200,-200);
-    // pros::delay(900);
-    // intake_drive(0,0);
-    // pros::delay(500);
+    move_forward(25, 0.5);
+    pros::delay(50);
+    intake_drive(-200,-200);
+    pros::delay(900);
+    intake_drive(0,0);
+    pros::delay(500);
 
-    // stack_9_cubes();
-
-    // chassis->stop();
+    stack_9_cubes();
     
-    // turning(90, 0.3);
-    // pros::delay(200);
-    // turning(15, 0.3);
-    // pros::delay(200);
+    turning(90, 0.3);
+    pros::delay(200);
+    turning(15, 0.3);
+    pros::delay(200);
 
+    move_forward(15.5,-0.3);
+    pros::delay(300);
+    
+/* first stack */
     lever_drive(200);
     intake_drive(-120,-120);
     chassis->getModel()->tank(0.4,0.2);
@@ -366,7 +376,7 @@ void skill_auton() {
     pros::delay(200);
 
     move_forward(26, 0.2);
-    intake_drive(100,100);
+    intake_drive(80,80);
     pros::delay(750);
     intake_drive(0,0);
 
@@ -375,5 +385,36 @@ void skill_auton() {
 
     arm_drive(0);
 
+    /* ----------> insert turning and stacking more cubes <------- */
+
+    move_forward(18,-0.4);
+    chassis->turnAngle(302_deg);
+
+    intake_drive(-120,-120);
+
+    move_forward(34,.4);
+    pros::delay(200);
+
+    intake_drive(200,200);
+    pros::delay(100);
+    intake_drive(0,0);
+
+
+    move_forward(14, -0.3);
+
+    intake_drive(0,0);
+    arm_drive(2);
+    pros::delay(200);
+
+    move_forward(12, 0.2);
+    intake_drive(100,100);
+    pros::delay(750);
+    intake_drive(0,0);
+
+    move_forward(10, -0.3);
+    pros::delay(100);
+    arm_drive(0);
     chassis->stop();
+
+
 }
