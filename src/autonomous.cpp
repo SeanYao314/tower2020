@@ -378,28 +378,32 @@ void blue_protect() {
 
 /* -------------------------------7 CUBE RED----------------------------------- */
 void red_seven_cube() {
-    // chassis->getModel()->tank(0.3,0.3);
-    // pros::delay(500);
-    // chassis->getModel()->tank(0,0);
-    // arm_drive(4);
-    // pros::delay(140);
-    // intake_drive(200,200);
-    // pros::delay(210);
-    // arm_drive(0);
+    chassis->getModel()->tank(0.3,0.3);
+    pros::delay(500);
+    chassis->getModel()->tank(0,0);
+    arm_drive(4);
+    pros::delay(140);
+    intake_drive(200,200);
+    pros::delay(210);
+    arm_drive(0);
 
-    // intake_drive(0,0);
+    intake_drive(0,0);
 
-    // chassis->setMaxVelocity(76);
-    // intake_drive(-200,-200);
-    // chassis->moveDistance(26_in); 
+    chassis->setMaxVelocity(76);
+    intake_drive(-200,-200);
+    chassis->moveDistance(33_in); 
 
-    // pros::delay(20000);
+    pros::delay(400);
 
+    moveForwardPower(11,-0.3);
     gyroTurning(-14,0.3);
     intake_drive(-120,-120);
     chassis->getModel()->tank(0.3,0.55);
-    pros::delay(1100);
+    pros::delay(980);
+    chassis->getModel()->tank(0.08,0.08);
+    pros::delay(180);
     chassis->getModel()->tank(0,0);
+    pros::delay(800);
 
     // intake_drive(-120,-120);
     // chassis->moveDistance(17.9_in);
