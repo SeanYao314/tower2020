@@ -106,10 +106,14 @@ void intake_control() {
 		intake_drive(-200, -200);
 	} else if(master.get_digital(E_CONTROLLER_DIGITAL_L2) && armPos == 0) {
 		intake_drive(190,190);
-	} else if(master.get_digital(E_CONTROLLER_DIGITAL_L2) && armPos > 0) {
+	} else if((master.get_digital(E_CONTROLLER_DIGITAL_L2) && armPos == 2) || (master.get_digital(E_CONTROLLER_DIGITAL_L2) && armPos == 4)) {
 		//slower for scoring in towers
 		pros::delay(15);
 		intake_drive(96,96);
+	}  else if((master.get_digital(E_CONTROLLER_DIGITAL_L2) && armPos == 1) || (master.get_digital(E_CONTROLLER_DIGITAL_L2) && armPos == 3)) {
+		//slower for scoring in towers
+		pros::delay(15);
+		intake_drive(200,200);
 	} else {
 		intake_drive(0,0);
 	}
@@ -122,6 +126,7 @@ int intakeSpeed = 34.0;
 void lever_control() {
 	if(master.get_digital(E_CONTROLLER_DIGITAL_R1)) {
 		intake_drive(intakeSpeed, intakeSpeed);
+		arm_motor.setBrakeMode(AbstractMotor::brakeMode::hold);
 		if(lever_motor.getPosition() < -3550) {
 			tray_speed = 10;
 			intakeSpeed = 0;
@@ -132,6 +137,7 @@ void lever_control() {
 		lever_motor.moveAbsolute(leverEndPos, E_CONTROLLER_DIGITAL_R1*tray_speed);
 		//intake pushes out lever slightly
 	} else if(master.get_digital(E_CONTROLLER_DIGITAL_R2)) {
+		arm_motor.setBrakeMode(AbstractMotor::brakeMode::coast);
 		intake_drive(0,0);
 		lever_motor.moveAbsolute(leverStartPos, E_CONTROLLER_DIGITAL_R1*200);
 	} else {
