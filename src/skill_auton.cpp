@@ -312,6 +312,30 @@ void replay_dp(vector<vector<int>>& data_points) {
     }
 }
 
+void turningImu(int degrees, double chassis_power) {
+    const double pi = 3.14159265358979323846;
+    double current_pos = (imu.get_rotation() + (gyro.get_value()/10))/2;
+    double target_pos = current_pos + degrees;
+
+    double delta = sin((target_pos - current_pos) / 180 * pi);
+    double last_delta = abs(delta);
+    double current_delta = last_delta;
+
+    while (current_delta <= last_delta) {
+        last_delta = current_delta;
+        if (delta < 0) {
+            chassis->getModel()->tank(chassis_power, -chassis_power);
+        } else {
+            chassis->getModel()->tank(-chassis_power, chassis_power);
+        }
+        current_pos = (imu.get_rotation() + (gyro.get_value()/10))/2;
+        current_delta = abs(sin((target_pos - current_pos) / 180 * pi));
+
+        cout << "target pos = " << target_pos << ", current pos = " << current_pos << ", delta = " << delta << endl;
+        pros::delay(20);
+    }
+    chassis->getModel()->stop();
+}
 void ten_Cubes() {
     intake_drive(-160,-160);
     move_forward(26, 0.4);
@@ -332,9 +356,202 @@ void ten_Cubes() {
     // move_forward(80,0.3);
 }
 
+void imuAbs(double degrees, double speed) {
+    double cPos;
+    double degCoef = (17/18) * degrees;
+    if(speed > 0) {
+        cPos = imu.get_rotation();
+    } else if(speed < 0) {
+        cPos = abs(int(imu.get_rotation() - 360)) % 360;
+    }
+    double tPos = degrees;
+    double aDelta = abs(tPos - cPos);
+    int threshold = 2.5;
+    double speedCoef = 1;
+
+    while(aDelta > threshold) {
+        if(35 > aDelta > 53) {
+            speedCoef = 1/2;
+        } else if(0 > aDelta > 34) {
+            speedCoef = 1/7;
+        } else if(aDelta < 0) {
+            speedCoef = -1/2;
+        } else {
+            speedCoef = 1;
+        } 
+
+        chassis->getModel()->tank(-speedCoef * speed/200, speedCoef * speed/200);
+
+        if(speed > 0) {
+            cPos = imu.get_rotation();
+        } else if(speed < 0) {
+            cPos = abs(int(imu.get_rotation() - 360)) % 360;
+       }
+        tPos = degrees;
+        aDelta = abs(tPos - cPos);
+    }
+    chassis->getModel()->tank(0,0);
+}
+void imuAbsolute(double speed, double degrees) {
+    double cPos;
+    if(speed > 0) {
+        cPos = imu.get_rotation();
+    } else if(speed < 0) {
+        cPos = abs(int(imu.get_rotation() - 360)) % 360;
+    }
+    double tPos = degrees;
+    double aDelta = abs(tPos - cPos);
+    int threshold = 2.5;
+    int rotationDir = (abs(tPos - cPos))/(tPos-cPos);
+    while(aDelta > threshold) {
+        chassis->getModel()->tank(speed/200 * rotationDir, speed/200 * rotationDir);
+        if(speed > 0) {
+            cPos = imu.get_rotation();
+        } else if(speed < 0) {
+            cPos = abs(int(imu.get_rotation() - 360)) % 360;
+        }
+        tPos = degrees;
+        aDelta = abs(tPos - cPos);
+        int rotationDir = (abs(tPos - cPos))/(tPos-cPos);
+    }
+    chassis->getModel()->tank(0,0);
+}
+void gyroTurnR(double targetAngle, double speed) {
+    int threshold = 2;
+    int cPos = abs((int)imu.get_rotation() - 360) % 360;
+    int tPos = targetAngle;
+    int aDelta = abs(cPos - tPos);
+    int delta = tPos - cPos;
+
+    std::cout << "the current position is " << cPos << endl;
+
+    while (aDelta >= threshold) {
+        // double speedCoef = -(pow(1.0003, 2*(delta+5442.91139001))+226.996)/200;
+        double speedCoef = ((5/(pow(10,0.1093637)))*pow(delta,(33/63)))/200;
+
+        chassis->getModel()->tank(-speedCoef*speed/10, speedCoef*speed/10);
+
+        cPos = imu.get_rotation();
+        aDelta = abs(cPos - tPos);
+        delta = tPos - cPos;
+        //std::cout << "the current position is " << speedCoef*speed << endl;
+    }
+    chassis->getModel()->tank(0,0);
+}
+
+void turnP(int targetTurn, int voltageMax=127, bool debugLog=false) {
+	float kp = 1.6;
+	float ki = 0.8;
+	float kd = 0.45;
+
+	// the untouchables
+	int voltageCap = 0;
+	float voltage = 0;
+	float errorCurrent;
+	float errorLast;
+	int errorCurrentInt;
+	int errorLastInt;
+	int sameErrCycles = 0;
+	int same0ErrCycles = 0;
+	int p;
+	float i;
+	int d;
+	int sign;
+	float error;
+	int startTime = pros::millis();
+
+	while(autonomous) {
+		error = targetTurn - imu.get_rotation();
+		errorCurrent = abs(error);
+		errorCurrentInt = errorCurrent;
+		sign = targetTurn / abs(targetTurn); // -1 or 1
+
+		p = (error * kp);
+		if (abs(error) < 10) { // if we are in range for I to be desireable
+			i = ((i + error) * ki);
+		}
+		else
+			i = 0;
+		d = (error - errorLast) * kd;
+		
+		voltage = p + i + d;
+
+		if(abs(voltage) > voltageMax) voltage = voltageMax * sign;
+
+		// set the motors to the intended speed
+		chassis->getModel()->tank(-voltage/127, voltage/127);
+
+		// timeout utility
+		if (errorLastInt == errorCurrentInt) {
+			if (errorLast <= 2 and errorCurrent <= 2) { // saying that error less than 2 counts as 0
+				same0ErrCycles +=1;
+			}
+			sameErrCycles += 1;
+		}
+		else {
+			sameErrCycles = 0;
+			same0ErrCycles = 0;
+		}
+
+		// exit paramaters
+		if (same0ErrCycles >= 5 or sameErrCycles >= 60) { // allowing for smol error or exit if we stay the same err for .6 second
+			chassis->stop();
+			std::cout << pros::millis() << "task complete with error " << errorCurrent << " in " << (pros::millis() - startTime) << "ms" << std::endl;
+			return;
+		}
+		
+		// debug
+		std::cout << pros::millis() << "error " << errorCurrent << std::endl;
+		std::cout << pros::millis() << "voltage " << voltage << std::endl;
+        	std::cout << pros::millis() << "theta " << imu.get_rotation() << std::endl;
+
+		// for csv output, graphing the function
+		// if (debugLog) std::cout << pros::millis() << "," << error << "," << voltage << std::endl;
+
+		// nothing goes after this
+		errorLast = errorCurrent;
+		errorLastInt = errorLast;
+		pros::delay(10);
+	}
+}
+
 void skill_auton() {
-    raise_the_arm_and_release_anti_tip();
-    ten_Cubes();
+    // chassis->getModel()->tank(0.5,0.5);
+    // pros::delay(350);
+    // chassis->getModel()->tank(0,0);
+    // arm_drive(4);
+    // pros::delay(160);
+    // intake_drive(200,200);
+    // pros::delay(130);
+    // arm_drive(0);
+
+    // intake_drive(0,0);
+
+    // chassis->setMaxVelocity(66);
+    // intake_drive(-190,-190);
+    // chassis->moveDistance(36_in);
+    // intake_drive(-10,-10);
+
+    // pros::delay(280);
+    // // turning(24, 0.4);
+    // // turningImu(24,0.4);
+    // chassis->setMaxVelocity(1200);
+    // chassis->turnAngle(-42.5_deg);
+
+    // move_forward(22,-0.7);
+    // pros::delay(400);
+    // imuAbsolute(0, -70);
+
+    // pros::delay(200);
+    // move_forward(10,-0.3);
+    // pros::delay(200);
+    // intake_drive(-190, -190);
+    // move_forward(30,0.3);
+    // pros::delay(100);
+
+    // chassis->setMaxVelocity(54);
+    // chassis->moveDistance(15_in);
+    // intake_drive(-10,-10);
     /*
     chassis->stop();
     pros::delay(50);
@@ -422,4 +639,6 @@ void skill_auton() {
     arm_drive(0);
     chassis->stop();
     */
+//    gyroTurnR(90, 200);
+   turnP(90, 127, true);
 }
